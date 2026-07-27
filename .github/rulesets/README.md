@@ -2,7 +2,9 @@
 
 Reference configuration for the `main` branch ruleset. Apply in GitHub:
 
-**Settings → Rules → Rulesets → Edit "PRs & conventional commits"** (or import this JSON).
+**Settings → Rules → Rulesets → New ruleset → Import a ruleset** (use [protect-main.json](./protect-main.json)).
+
+`bypass_actors` is empty on purpose: this is a personal repository, so `OrganizationAdmin` is invalid and causes `Error importing ruleset: The ruleset you are importing contains an invalid actor`. If you later move the repo into an organization, you can add org-admin bypass in the UI.
 
 ## Required status checks
 
