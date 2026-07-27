@@ -2,6 +2,12 @@
 
 Briefly describe what this PR changes and why.
 
+**PR title** must follow [Conventional Commits](https://www.conventionalcommits.org/) (this becomes the squash-merge commit on `main`):
+
+`type(scope): description`
+
+Examples: `feat(booking): add cancel flow`, `fix(ci): correct Allure artifact path`
+
 ## Type of change
 
 - [ ] Framework / tooling

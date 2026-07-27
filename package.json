@@ -30,7 +30,8 @@
     "allure:open": "allure open ./allure-report",
     "docker:build": "docker compose build",
     "docker:test": "docker compose run --rm api-tests",
-    "docker:down": "docker compose down -v"
+    "docker:down": "docker compose down -v",
+    "prepare": "husky"
   },
   "keywords": [
     "playwright",
@@ -44,6 +45,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
     "@faker-js/faker": "^10.5.0",
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.1",
@@ -56,6 +59,7 @@
     "dotenv": "^17.4.2",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "newman": "^6.2.2",
     "newman-reporter-htmlextra": "^1.23.1",
     "prettier": "^3.9.5",
