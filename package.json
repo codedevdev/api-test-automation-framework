@@ -57,7 +57,7 @@
     "allure-commandline": "^2.43.0",
     "allure-playwright": "^3.10.2",
     "dotenv": "^17.4.2",
-    "eslint": "^8.57.1",
+    "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "newman": "^6.2.2",
