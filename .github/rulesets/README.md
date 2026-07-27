@@ -16,6 +16,11 @@ These names must match the job `name` fields in CI workflows:
 
 If GitHub shows a different format (for example `Pull Request Checks / Quality gates and smoke/contract`), use the exact strings from the dropdown after the first PR with these workflows runs.
 
+Verified against existing PR checks on `codedevdev/api-test-automation-framework` (job `name` fields, not `workflow / job`):
+
+- `Quality gates and smoke/contract`
+- `Newman Postman smoke`
+
 ## Apply / update checklist
 
 1. Set **Required approvals** to `0` (solo maintainer).
