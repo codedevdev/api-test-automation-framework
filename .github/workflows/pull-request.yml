@@ -1,0 +1,96 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-and-smoke:
+    name: Quality gates and smoke/contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Prepare environment
+        run: cp .env.example .env
+
+      - name: Health preflight
+        run: npm run healthcheck
+
+      - name: Run smoke tests
+        run: npm run test:smoke
+
+      - name: Run contract tests
+        run: npm run test:contract
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-pr
+          path: allure-results
+          if-no-files-found: ignore
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-pr
+          path: playwright-report
+          if-no-files-found: ignore
+
+  newman-smoke:
+    name: Newman Postman smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Newman smoke collections
+        run: npm run newman:smoke
+
+      - name: Upload Newman HTML reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-reports-pr
+          path: postman/newman/*.html
+          if-no-files-found: ignore

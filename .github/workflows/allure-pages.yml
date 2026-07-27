@@ -1,0 +1,75 @@
+name: Publish Allure Report
+
+on:
+  workflow_run:
+    workflows:
+      - Scheduled Tests
+      - Regression Suite
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Generate and publish Allure
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download Allure results
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: ${{ github.event.workflow_run.path || 'scheduled-tests.yml' }}
+          run_id: ${{ github.event.workflow_run.id }}
+          name: allure-results-scheduled
+          path: allure-results
+          if_no_artifact_found: warn
+        continue-on-error: true
+
+      - name: Install Allure CLI
+        run: npm install -g allure-commandline
+
+      - name: Generate Allure report
+        run: |
+          if [ -d allure-results ] && [ "$(ls -A allure-results)" ]; then
+            npm run allure:generate
+          else
+            mkdir -p allure-report
+            echo "<html><body><h1>No Allure results available for this run</h1></body></html>" > allure-report/index.html
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

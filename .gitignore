@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+allure-results/
+allure-report/
+test-results/
+playwright-report/
+postman/newman/*.html
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.tsbuildinfo

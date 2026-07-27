@@ -1,0 +1,64 @@
+name: Regression Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      booker_base_url:
+        description: Restful Booker base URL
+        required: false
+        default: https://restful-booker.herokuapp.com
+      fake_api_base_url:
+        description: Fake REST API base URL
+        required: false
+        default: https://fakerestapi.azurewebsites.net
+
+jobs:
+  regression:
+    name: Full regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare environment
+        run: cp .env.example .env
+
+      - name: Health preflight
+        run: npm run healthcheck
+        env:
+          BOOKER_BASE_URL: ${{ inputs.booker_base_url }}
+          FAKE_API_BASE_URL: ${{ inputs.fake_api_base_url }}
+
+      - name: Run full test suite
+        run: npm run test:all
+        env:
+          BOOKER_BASE_URL: ${{ inputs.booker_base_url }}
+          FAKE_API_BASE_URL: ${{ inputs.fake_api_base_url }}
+          CI: true
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-regression
+          path: allure-results
+          if-no-files-found: ignore
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-regression
+          path: playwright-report
+          if-no-files-found: ignore

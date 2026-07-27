@@ -1,0 +1,53 @@
+name: Scheduled Tests
+
+on:
+  schedule:
+    # Mondays and Thursdays at 02:00 UTC
+    - cron: '0 2 * * 1,4'
+  workflow_dispatch:
+
+jobs:
+  scheduled-full-suite:
+    name: Nightly full suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare environment
+        run: cp .env.example .env
+
+      - name: Health preflight
+        run: npm run healthcheck
+
+      - name: Run full test suite
+        run: npm run test:all
+        env:
+          CI: true
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-scheduled
+          path: allure-results
+          if-no-files-found: ignore
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-scheduled
+          path: playwright-report
+          if-no-files-found: ignore

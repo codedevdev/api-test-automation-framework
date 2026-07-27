@@ -1,0 +1,26 @@
+services:
+  api-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api-test-runner
+    env_file:
+      - .env
+    environment:
+      CI: 'true'
+      BOOKER_BASE_URL: ${BOOKER_BASE_URL:-https://restful-booker.herokuapp.com}
+      FAKE_API_BASE_URL: ${FAKE_API_BASE_URL:-https://fakerestapi.azurewebsites.net}
+      BOOKER_USERNAME: ${BOOKER_USERNAME:-admin}
+      BOOKER_PASSWORD: ${BOOKER_PASSWORD:-password123}
+      API_TIMEOUT: ${API_TIMEOUT:-15000}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - ./allure-results:/app/allure-results
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+    networks:
+      - api-tests-net
+
+networks:
+  api-tests-net:
+    driver: bridge
