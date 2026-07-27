@@ -278,6 +278,34 @@ expect(fetched.body.firstname).toBe('Pavlo');
 - Richer Allure categories and history trend on Pages
 - Lightweight performance smoke budget per endpoint
 
+## Contributing
+
+### Branch and merge workflow
+
+- Open a pull request into `main`; direct pushes to `main` are blocked by the branch ruleset.
+- CI must pass before merge: quality gates, smoke/contract tests, Newman smoke, and PR title validation.
+- Keep your branch up to date with `main` before merging.
+
+### Conventional commits
+
+Commit messages and PR titles must follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+type(scope): description
+```
+
+Allowed types: `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test`.
+
+Examples:
+
+- `feat(booking): add cancel flow`
+- `fix(ci): correct Allure artifact path`
+- `docs: add branch protection notes`
+
+Local commits are validated by commitlint (Husky `commit-msg` hook). PR titles are checked in CI because squash-merge uses the PR title as the commit on `main`.
+
+Branch ruleset reference: [`.github/rulesets/protect-main.json`](./.github/rulesets/protect-main.json)
+
 ## Author
 
 **Pavlo** - QA Automation Engineer
