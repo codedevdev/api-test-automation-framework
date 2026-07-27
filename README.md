@@ -23,9 +23,9 @@ Live reports: [Allure on GitHub Pages](https://codedevdev.github.io/api-test-aut
 
 ## Demo
 
-| Allure report (smoke run) | CI pipeline (PR checks) |
-| --- | --- |
-| ![Allure dashboard](./docs/assets/allure-dashboard.png) | ![CI pipeline success](./docs/assets/ci-pipeline-success.png) |
+![Allure report — 65 test cases, live on GitHub Pages](./docs/assets/allure-dashboard.png)
+
+[Open live report](https://codedevdev.github.io/api-test-automation-framework/)
 
 ## Project overview
 
