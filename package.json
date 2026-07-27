@@ -62,7 +62,7 @@
     "husky": "^9.1.7",
     "newman": "^6.2.2",
     "newman-reporter-htmlextra": "^1.23.1",
-    "prettier": "^3.9.5",
+    "prettier": "^3.9.6",
     "tsx": "^4.23.1",
     "typescript": "^5.8.3"
   }
